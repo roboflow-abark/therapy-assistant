@@ -121,16 +121,18 @@ class ChatRequest(BaseModel):
     message: str
     history: List[Dict[str, str]] = [] # History of {"role": "user", "content": "..."}
 
-# --- API Endpoints ---
+# --- Get the directory where main.py is located ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+HTML_FILE_PATH = os.path.join(BASE_DIR, "index.html")
 
 @app.get("/", response_class=HTMLResponse)
 async def get_root(request: Request):
     """Serves the main HTML chat interface."""
-    try:
-        with open("index.html", "r", encoding="utf-8") as f:
-            return HTMLResponse(content=f.read())
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="index.html not found.")
+    if not os.path.exists(HTML_FILE_PATH):
+        raise HTTPException(status_code=404, detail=f"index.html not found at {HTML_FILE_PATH}")
+    
+    with open(HTML_FILE_PATH, "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
@@ -202,4 +204,5 @@ async def chat(request: ChatRequest):
 #     print("Access the app at http://localhost:8000")
 
 #     uvicorn.run(app)
+
 
