@@ -123,14 +123,14 @@ class ChatRequest(BaseModel):
 
 # --- API Endpoints ---
 
-@app.get("/", response_class=HTMLResponse)
-async def get_root(request: Request):
-    """Serves the main HTML chat interface."""
-    try:
-        with open("index.html", "r", encoding="utf-8") as f:
-            return HTMLResponse(content=f.read())
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="index.html not found.")
+# @app.get("/", response_class=HTMLResponse)
+# async def get_root(request: Request):
+#     """Serves the main HTML chat interface."""
+#     try:
+#         with open("index.html", "r", encoding="utf-8") as f:
+#             return HTMLResponse(content=f.read())
+#     except FileNotFoundError:
+#         raise HTTPException(status_code=404, detail="index.html not found.")
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
@@ -200,4 +200,5 @@ async def chat(request: ChatRequest):
 #     print("Example: export OPENAI_API_KEY='your_key_here'")
 #     print("Then run: python main.py")
 #     print("Access the app at http://localhost:8000")
+
 #     uvicorn.run(app)
